@@ -1,13 +1,20 @@
-// Mock product data for now
-const products = [
-  { id: 1, name: "Champion UTD Hoodie", price: 49.99 },
-  { id: 2, name: "UTD Tumbler", price: 19.99 },
-  { id: 3, name: "Temoc Stickers", price: 9.99 }
-];
+async function loadProducts() {
+  try {
+    const res = await fetch("https://utd-bookstore-backend-532131639393.us-central1.run.app/products");
+    if (!res.ok) {
+      console.error("Failed to load products:", res.status, res.statusText);
+      return;
+    }
+    const products = await res.json();
+    renderProducts(products);
+  } catch (err) {
+    console.error("Error loading products:", err);
+  }
+}
 
 let selectedProduct = null;
 
-function renderProducts() {
+function renderProducts(products) {
   const grid = document.getElementById("product-grid");
   grid.innerHTML = "";
 
@@ -46,6 +53,32 @@ function closeCheckout() {
   document.getElementById("checkout-utd-id").value = "";
 }
 
+async function submitOrder(orderData) {
+  try {
+    const res = await fetch("https://utd-bookstore-backend-532131639393.us-central1.run.app/order", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(orderData)
+    });
+
+    if (!res.ok) {
+      console.error("Failed to submit order:", res.status, res.statusText);
+      alert("There was an issue placing your order. Please try again.");
+      return;
+    }
+
+    const result = await res.json();
+    console.log("Order response:", result);
+    alert("Order placed successfully!");
+    closeCheckout();
+  } catch (err) {
+    console.error("Error submitting order:", err);
+    alert("There was an error placing your order. Please try again.");
+  }
+}
+
 function setupCheckoutHandlers() {
   const confirmBtn = document.getElementById("checkout-confirm");
   const cancelBtn = document.getElementById("checkout-cancel");
@@ -59,14 +92,13 @@ function setupCheckoutHandlers() {
       return;
     }
 
-    console.log("Mock order submitted:", {
+    const orderData = {
       productId: selectedProduct.id,
       studentName: name,
       studentId: utdId
-    });
+    };
 
-    alert("Order submitted (mock). This will later call the backend API.");
-    closeCheckout();
+    submitOrder(orderData);
   });
 
   cancelBtn.addEventListener("click", () => {
@@ -75,5 +107,5 @@ function setupCheckoutHandlers() {
 }
 
 // Initialize page
-renderProducts();
+loadProducts();
 setupCheckoutHandlers();
