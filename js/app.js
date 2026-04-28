@@ -1,3 +1,20 @@
+const express = require('express');
+const app = express();
+const path = require('path');
+const port = process.env.PORT || 8080;
+
+// This serves your frontend files (if they are in the root)
+app.use(express.static(__dirname));
+
+// This handles the connection to your backend
+app.get('/api-config', (req, res) => {
+    res.json({ backendUrl: process.env.BACKEND_URL });
+});
+
+app.listen(port, () => {
+    console.log(`Frontend listening on port ${port}`);
+});
+
 async function loadProducts() {
   try {
     const res = await fetch("https://utd-bookstore-backend-532131639393.us-central1.run.app/products");
