@@ -1,13 +1,13 @@
 steps:
-  # Step 1: Build the container image
+  # Step 1: Build the container image using Artifact Registry path
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/$PROJECT_ID/frontend:$COMMIT_SHA', '.']
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/frontend:$COMMIT_SHA', '.']
 
-  # Step 2: Push the image to Container Registry
+  # Step 2: Push the image to Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/$PROJECT_ID/frontend:$COMMIT_SHA']
+    args: ['push', 'us-central1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/frontend:$COMMIT_SHA']
 
-  # Step 3: Deploy to Cloud Run
+  # Step 3: Deploy to Cloud Run using the new image path
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
     args:
@@ -15,14 +15,14 @@ steps:
       - 'deploy'
       - 'utd-bookstore-frontend'
       - '--image'
-      - 'gcr.io/$PROJECT_ID/frontend:$COMMIT_SHA'
+      - 'us-central1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/frontend:$COMMIT_SHA'
       - '--region'
       - 'us-central1'
       - '--platform'
       - 'managed'
 
 images:
-  - 'gcr.io/$PROJECT_ID/frontend:$COMMIT_SHA'
-  
+  - 'us-central1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/frontend:$COMMIT_SHA'
+
 options:
   logging: CLOUD_LOGGING_ONLY
