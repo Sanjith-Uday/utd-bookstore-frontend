@@ -26,7 +26,3 @@ EXPOSE 80
 
 # Start Nginx
 CMD ["nginx", "-g", "daemon off;"]
-
-build:
-  options:
-    logging: CLOUD_LOGGING_ONLY
