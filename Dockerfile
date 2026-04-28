@@ -1,17 +1,17 @@
-# Use the official Node.js image.
+# Use the official Node.js image
 FROM node:18-slim
 
-# Create and change to the app directory.
+# Create and change to the app directory
 WORKDIR /usr/src/app
 
-# Copy application dependency manifests to the container image.
-COPY package*.json ./
-
-# Install production dependencies.
-RUN npm install --only=production
-
-# Copy local code to the container image.
+# Copy all files from your repository into the container
 COPY . .
 
-# Run the web service on container startup.
-CMD [ "npm", "start" ]
+# Install dependencies ONLY if package.json exists
+RUN if [ -f package.json ]; then npm install; fi
+
+# Expose the port your app runs on (Cloud Run defaults to 8080)
+EXPOSE 8080
+
+# Start the application
+CMD [ "node", "app.js" ]
