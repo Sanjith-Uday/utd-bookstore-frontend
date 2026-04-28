@@ -1,0 +1,12 @@
+{
+  "name": "utd-bookstore-frontend",
+  "version": "1.0.0",
+  "description": "Frontend for UTD Bookstore",
+  "main": "js/app.js",
+  "scripts": {
+    "start": "node js/app.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
