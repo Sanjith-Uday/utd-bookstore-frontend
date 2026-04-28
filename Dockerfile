@@ -14,4 +14,4 @@ RUN if [ -f package.json ]; then npm install; fi
 EXPOSE 8080
 
 # Start the application
-CMD [ "node", "app.js" ]
+CMD [ "node", "js/app.js" ]
